@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import MermaidEditor from "./MermaidEditor";
 import ChatSidebar from "./ChatSidebar";
 import MermaidDiagramRenderer from "./MermaidDiagramRenderer";
+import { mermaidWebSocketService } from "../api/websocket/mermaidWebSocket";
+import { getUserId } from "../utils/userId";
 
 type Panel = "left" | "middle" | "right";
 
@@ -13,9 +15,41 @@ export default function ResizableThreePanels() {
     B -->|Yes| C[Do something]
     B -->|No| D[Do something else]
     C --> E[End]
-    D --> E`;
+    D => E`;
 
     const [chartText, setChartText] = useState(initialChart);
+    const [isConnected, setIsConnected] = useState(false);
+    const [userId, setUserId] = useState("");
+
+    // Initialize user ID on component mount
+    useEffect(() => {
+        const id = getUserId();
+        setUserId(id);
+        console.log("User ID initialized:", id);
+    }, []);
+
+    // WebSocket connection and sync
+    useEffect(() => {
+        if (!userId) return; // Wait for userId to be initialized
+
+        mermaidWebSocketService.connect(
+            (content) => setChartText(content),
+            (connected) => setIsConnected(connected),
+            userId
+        );
+
+        // Cleanup on unmount
+        return () => {
+            mermaidWebSocketService.disconnect();
+        };
+    }, [userId]);
+
+    // Send diagram updates to server
+    const handleChartChange = (newChart: string) => {
+        setChartText(newChart);
+        mermaidWebSocketService.sendUpdate(newChart);
+    };
+
     const [leftWidth, setLeftWidth] = useState(33.3);
     const [middleWidth, setMiddleWidth] = useState(33.3);
     const [visible, setVisible] = useState({
@@ -100,7 +134,12 @@ export default function ResizableThreePanels() {
                     >
                         ✖
                     </button>
-                    <MermaidEditor chartInText={chartText} onChange={setChartText} />
+                    <div className="absolute bottom-2 left-2 z-10 text-xs">
+                        <span className={`px-2 py-1 rounded ${isConnected ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                            {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
+                        </span>
+                    </div>
+                    <MermaidEditor chartInText={chartText} onChange={handleChartChange} />
                 </div>
             )}
 
