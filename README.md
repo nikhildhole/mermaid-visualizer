@@ -92,8 +92,10 @@ flowchart TD
     B -->|Yes| C[Do something]
     B -->|No| D[Do something else]
     C --> E[End]
-    D => E
+    D --> E
+
 ```
+
 
 ## Backend Requirements
 
