@@ -12,6 +12,12 @@ A real-time collaborative Mermaid diagram editor and visualizer built with Next.
 - **Session-based User IDs**: Unique user identification per browser session
 - **Error Handling**: Clear feedback for invalid Mermaid syntax
 
+## Screenshots
+
+![Mermaid Visualizer Interface](screenshot.png)
+
+*Screenshot of the Mermaid Visualizer showing the three-panel layout with editor, diagram viewer, and chat sidebar.*
+
 ## Tech Stack
 
 - **Frontend**: Next.js 16, React 19, TypeScript
@@ -44,7 +50,7 @@ The backend must be running on `http://localhost:8000` and provides:
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/nikhildhole/mermaid-visualizer
 cd mermaid-visualizer
 ```
 
