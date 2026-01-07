@@ -26,7 +26,19 @@ A real-time collaborative Mermaid diagram editor and visualizer built with Next.
 
 - Node.js 18+
 - pnpm (recommended) or npm/yarn
-- Backend service running on `http://127.0.0.1:8000` (for chat and WebSocket features)
+
+## Backend
+
+This application uses the [Mermaid Drawer AI](https://github.com/nikhildhole/mermaid-drawer-ai) backend service, which provides:
+
+- **AI-Powered Diagram Generation**: Uses Google's Gemini 2.5 Flash model to create Mermaid diagrams from natural language descriptions
+- **Real-Time Collaboration**: WebSocket support for live updates and multi-user diagram editing
+- **Streaming Chat Responses**: Server-Sent Events for real-time AI assistance
+- **User-Specific Storage**: Isolated diagram storage per user
+
+The backend must be running on `http://localhost:8000` and provides:
+- **Chat API**: `POST /ask` - AI-powered diagram generation and assistance
+- **WebSocket**: `ws://127.0.0.1:8000/mermaid` - Real-time diagram synchronization
 
 ## Installation
 
@@ -125,7 +137,3 @@ mermaid-visualizer/
 3. Make your changes
 4. Run tests and linting
 5. Submit a pull request
-
-## License
-
-This project is private and proprietary.
